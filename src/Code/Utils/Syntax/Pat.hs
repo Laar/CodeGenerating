@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils
+-- Module      :  Code.Utils.Syntax.Pat
 -- Copyright   :
 -- License     :  AllRightsReserved
 --
@@ -12,16 +12,11 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils (
-
-    module Code.Utils.No,
-    module Code.Utils.Module,
-    module Code.Utils.Syntax,
-
-    module Code.Utils.Unsorted,
+module Code.Utils.Syntax.Pat (
+    patVar,
 ) where
 
-import Code.Utils.Module
-import Code.Utils.No
-import Code.Utils.Syntax
-import Code.Utils.Unsorted
+import Language.Haskell.Exts.Syntax
+
+patVar :: String -> Pat
+patVar = PVar . Ident

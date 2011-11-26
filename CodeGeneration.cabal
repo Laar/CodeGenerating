@@ -42,7 +42,10 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules:
+other-modules: Code.Utils.Syntax Code.Utils.Unsorted Code.Utils.No
+               Code.Utils.Syntax.Decl Code.Utils.Syntax.Alt Code.Utils.Syntax.Pat
+               Code.Utils.Syntax.Exp Code.Utils.Syntax.Type
+               Code.Utils.Syntax.Names Code.Utils.Module
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -Wall
