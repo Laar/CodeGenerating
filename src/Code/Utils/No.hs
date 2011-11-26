@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils
+-- Module      :  Code.Utils.No
 -- Copyright   :
 -- License     :  AllRightsReserved
 --
@@ -12,16 +12,19 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils (
-
-    module Code.Utils.No,
-    module Code.Utils.Module,
-    module Code.Utils.Syntax,
-
-    module Code.Utils.Unsorted,
+module Code.Utils.No (
+    noSrcLoc,
+    noBinds,
+    noContext,
 ) where
 
-import Code.Utils.Module
-import Code.Utils.No
-import Code.Utils.Syntax
-import Code.Utils.Unsorted
+import Language.Haskell.Exts.Syntax
+
+noContext :: Context
+noContext = []
+
+noSrcLoc :: SrcLoc
+noSrcLoc = error $ "no source location"
+
+noBinds :: Binds
+noBinds = BDecls []
