@@ -23,6 +23,7 @@ extra-source-files:
 extra-tmp-files:
 exposed-modules: Code.Expressions Code.Import Code.Mangler
                  Code.Module Code.Utils Code.New.Package
+                 Code.New.ModuleBuilder
 exposed: True
 buildable: True
 build-tools:
@@ -45,7 +46,7 @@ include-dirs:
 hs-source-dirs: src
 other-modules: Code.New.ModuleBuilder.Package
                Code.New.ModuleBuilder.Class Code.New.ModuleBuilder.Module
-               Code.New.ModuleBuilder Code.Utils.Unsorted Code.Utils.No
+               Code.Utils.Unsorted Code.Utils.No
                Code.Utils.Module Code.Utils.Syntax Code.Utils.Syntax.Decl
                Code.Utils.Syntax.Type Code.Utils.Syntax.Pat Code.Utils.Syntax.Exp
                Code.Utils.Syntax.Alt Code.Utils.Syntax.Names
