@@ -28,6 +28,11 @@ module Code.New.ModuleBuilder.Class (
     addPragma,
     getImport,
     hasPragma,
+
+    liftModify,
+    liftAdjust,
+    liftQuery,
+    liftState,
 ) where
 
 import Control.Monad.Reader.Class
@@ -36,7 +41,6 @@ import Control.Monad.State
 import Language.Haskell.Exts.Syntax
 
 class BuildableModule b where
-    emptyBModule :: ModuleName        -> b
     addBExport   :: ExportSpec   -> b -> b
     addBDecls    :: [Decl]       -> b -> b
     addBImport   :: ImportDecl   -> b -> b
@@ -54,9 +58,13 @@ newtype ModuleBuilder s m a = ModuleBuilder {getBState :: StateT s m a}
 
 deriving instance Monad m => Monad (ModuleBuilder s m)
 deriving instance (MonadReader r m) => MonadReader r (ModuleBuilder s m)
+deriving instance MonadTrans (ModuleBuilder s)
 
 liftModify :: (BuildableModule bm, Monad m) => (a -> bm -> bm) -> a -> ModuleBuilder bm m ()
 liftModify f v = ModuleBuilder $ modify (f v)
+
+liftAdjust :: (BuildableModule bm, Monad m) => (bm -> bm) -> ModuleBuilder bm m ()
+liftAdjust f = ModuleBuilder $ modify f
 
 addExport :: (BuildableModule bm, Monad m) => ExportSpec -> ModuleBuilder bm m ()
 addExport = liftModify addBExport
@@ -82,3 +90,5 @@ getImport = liftQuery getBImport
 hasPragma :: (BuildableModule bm, Monad m) => ModulePragma -> ModuleBuilder bm m Bool
 hasPragma = liftQuery hasBPragma
 
+liftState :: (BuildableModule bm, Monad m) => StateT bm m a -> ModuleBuilder bm m a
+liftState = ModuleBuilder

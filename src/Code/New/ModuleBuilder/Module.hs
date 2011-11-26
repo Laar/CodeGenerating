@@ -24,7 +24,6 @@ import Code.Utils
 import Code.New.ModuleBuilder.Class
 
 instance BuildableModule Module where
-    emptyBModule = emptyModule
     addBExport e (Module sl mn mp wt exs im dc) =
         Module sl mn mp wt exs' im dc
         where
