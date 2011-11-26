@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils
+-- Module      :  Code.Utils.Syntax.Alt
 -- Copyright   :
 -- License     :  AllRightsReserved
 --
@@ -12,16 +12,18 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils (
-
-    module Code.Utils.No,
-    module Code.Utils.Module,
-    module Code.Utils.Syntax,
-
-    module Code.Utils.Unsorted,
+module Code.Utils.Syntax.Alt (
+    toAlt, toAlt',
 ) where
 
-import Code.Utils.Module
+import Language.Haskell.Exts.Syntax
+
 import Code.Utils.No
-import Code.Utils.Syntax
-import Code.Utils.Unsorted
+
+toAlt :: Pat -> Exp -> Alt
+toAlt p e = Alt noSrcLoc p (UnGuardedAlt e) (BDecls [])
+
+toAlt' :: (Pat, Exp) -> Alt
+toAlt' = uncurry toAlt
+
+

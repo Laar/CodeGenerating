@@ -22,7 +22,7 @@ data-dir: ""
 extra-source-files:
 extra-tmp-files:
 exposed-modules: Code.Expressions Code.Import Code.Mangler
-                 Code.Module Code.Utils
+                 Code.Module Code.Utils Code.New.Package
 exposed: True
 buildable: True
 build-tools:
@@ -43,7 +43,10 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules: Code.New.Package
+other-modules: Code.Utils.Syntax Code.Utils.Unsorted Code.Utils.No
+               Code.Utils.Syntax.Decl Code.Utils.Syntax.Alt Code.Utils.Syntax.Pat
+               Code.Utils.Syntax.Exp Code.Utils.Syntax.Type
+               Code.Utils.Syntax.Names Code.Utils.Module
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -Wall
