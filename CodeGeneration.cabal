@@ -7,7 +7,7 @@ license-file: ""
 copyright:
 maintainer:
 build-depends: base -any, containers -any, filepath -any,
-               haskell-src-exts >=1.11
+               haskell-src-exts >=1.11, mtl -any
 stability:
 homepage:
 package-url:
@@ -43,10 +43,12 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules: Code.Utils.Syntax Code.Utils.Unsorted Code.Utils.No
-               Code.Utils.Syntax.Decl Code.Utils.Syntax.Alt Code.Utils.Syntax.Pat
-               Code.Utils.Syntax.Exp Code.Utils.Syntax.Type
-               Code.Utils.Syntax.Names Code.Utils.Module
+other-modules: Code.New.ModuleBuilder.Class
+               Code.New.ModuleBuilder.Module Code.New.ModuleBuilder
+               Code.Utils.Unsorted Code.Utils.No Code.Utils.Module
+               Code.Utils.Syntax Code.Utils.Syntax.Decl Code.Utils.Syntax.Type
+               Code.Utils.Syntax.Pat Code.Utils.Syntax.Exp Code.Utils.Syntax.Alt
+               Code.Utils.Syntax.Names
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -Wall
