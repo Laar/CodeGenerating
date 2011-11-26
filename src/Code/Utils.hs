@@ -40,6 +40,7 @@ module Code.Utils (
     emptyModule',
 
     moduleToModuleName, moduleNameToName, moduleToName,
+    moduleNameToPath,
     addModulePragmas,
 
     noSrcLoc, noBinds,
@@ -50,6 +51,7 @@ module Code.Utils (
 ) where
 
 import Data.List
+import System.FilePath
 import Language.Haskell.Exts.Syntax
 
 infixl 9 @@
@@ -178,6 +180,12 @@ moduleNameToName (ModuleName name) = name
 
 moduleToName :: Module -> String
 moduleToName = moduleNameToName . moduleToModuleName
+
+moduleNameToPath :: ModuleName -> FilePath
+moduleNameToPath (ModuleName n) = foldr replace [] n
+    where
+        replace '.' p = pathSeparator : p
+        replace  c  p = c : p
 
 noSrcLoc :: SrcLoc
 noSrcLoc = error $ "no source location"
