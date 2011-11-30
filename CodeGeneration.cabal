@@ -6,8 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: base -any, containers -any, filepath -any,
-               haskell-src-exts >=1.11, mtl -any
+build-depends: base -any, containers -any, directory -any,
+               filepath -any, haskell-src-exts >=1.11, mtl -any
 stability:
 homepage:
 package-url:
@@ -22,8 +22,7 @@ data-dir: ""
 extra-source-files:
 extra-tmp-files:
 exposed-modules: Code.Expressions Code.Import Code.Mangler
-                 Code.Module Code.Utils Code.New.Package
-                 Code.New.ModuleBuilder
+                 Code.Module Code.New.ModuleBuilder Code.New.Package Code.Utils
 exposed: True
 buildable: True
 build-tools:
@@ -44,12 +43,12 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules: Code.New.ModuleBuilder.Package
-               Code.New.ModuleBuilder.Class Code.New.ModuleBuilder.Module
-               Code.Utils.Unsorted Code.Utils.No
-               Code.Utils.Module Code.Utils.Syntax Code.Utils.Syntax.Decl
-               Code.Utils.Syntax.Type Code.Utils.Syntax.Pat Code.Utils.Syntax.Exp
-               Code.Utils.Syntax.Alt Code.Utils.Syntax.Names
+other-modules: Code.New.ModuleBuilder.Class
+               Code.New.ModuleBuilder.Module Code.New.ModuleBuilder.Package
+               Code.Utils.Unsorted Code.Utils.No Code.Utils.Module
+               Code.Utils.Syntax Code.Utils.Syntax.Decl Code.Utils.Syntax.Type
+               Code.Utils.Syntax.Pat Code.Utils.Syntax.Exp Code.Utils.Syntax.Alt
+               Code.Utils.Syntax.Names
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -Wall

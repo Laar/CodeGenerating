@@ -24,10 +24,14 @@ module Code.New.Package (
     hasModule, getModule,
     listModules,
 
+    processModules,
+    processModules',
     writeModules,
+    safeWriteFile, -- Shame on you
 ) where
 
 import qualified Data.Map as M
+import System.Directory
 import System.FilePath
 import Language.Haskell.Exts.Pretty(prettyPrint)
 import Language.Haskell.Exts.Syntax
@@ -100,4 +104,8 @@ processModules' f = processModules (f,f)
 writeModules :: FilePath -> Package Module -> IO ()
 writeModules fp = processModules' writeModule
     where
-        writeModule mn m = writeFile (fp </> moduleNameToPath mn) (prettyPrint m)
+        writeModule mn m = safeWriteFile (fp </> moduleNameToPath mn <.> "hs") (prettyPrint m)
+--        safeWriteFile fp' fc = createDirectoryIfMissing True (dropFileName fp') >> writeFile fp' fc
+
+safeWriteFile :: FilePath -> String -> IO ()
+safeWriteFile fp' fc = createDirectoryIfMissing True (dropFileName fp') >> writeFile fp' fc
