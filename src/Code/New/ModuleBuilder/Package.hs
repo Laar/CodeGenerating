@@ -13,10 +13,11 @@
 -----------------------------------------------------------------------------
 
 module Code.New.ModuleBuilder.Package (
-    PackageBuild(),
+    PackageBuild(package),
     PackageBuilder,
     singlePackage,
     liftPadjust,
+    liftPquery,
     liftBuilder,
     activateModule,
 ) where
