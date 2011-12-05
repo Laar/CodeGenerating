@@ -21,12 +21,8 @@ data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Code.Generating.Expressions 
-                 Code.Generating.Import 
-                 Code.Generating.Mangler
-                 Code.Generating.Module 
-                 Code.Generating.ModuleBuilder 
-                 Code.Generating.Package 
+exposed-modules: Code.Generating.Mangler
+                 Code.Generating.ModuleBuilder Code.Generating.Package
                  Code.Generating.Utils
 exposed: True
 buildable: True
@@ -49,18 +45,13 @@ install-includes:
 include-dirs:
 hs-source-dirs: src
 other-modules: Code.Generating.ModuleBuilder.Class
-               Code.Generating.ModuleBuilder.Module 
+               Code.Generating.ModuleBuilder.Module
                Code.Generating.ModuleBuilder.Package
-               Code.Generating.Utils.Unsorted 
-               Code.Generating.Utils.No 
-               Code.Generating.Utils.Module
-               Code.Generating.Utils.Syntax 
-               Code.Generating.Utils.Syntax.Decl 
-               Code.Generating.Utils.Syntax.Type
-               Code.Generating.Utils.Syntax.Pat 
-               Code.Generating.Utils.Syntax.Exp 
-               Code.Generating.Utils.Syntax.Alt
-               Code.Generating.Utils.Syntax.Names
+               Code.Generating.Utils.Unsorted Code.Generating.Utils.No
+               Code.Generating.Utils.Module Code.Generating.Utils.Syntax
+               Code.Generating.Utils.Syntax.Decl Code.Generating.Utils.Syntax.Type
+               Code.Generating.Utils.Syntax.Pat Code.Generating.Utils.Syntax.Exp
+               Code.Generating.Utils.Syntax.Alt Code.Generating.Utils.Syntax.Names
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -Wall

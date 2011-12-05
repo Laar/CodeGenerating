@@ -20,12 +20,13 @@ module Code.Generating.Mangler (
 
     Macro,
     appendMacros,
+    ModuleSource,
 ) where
 
 import Data.List
 
 
-import Code.Generating.Module(ModuleSource)
+type ModuleSource = String
 
 -- | hexify a string, under the condition that it only consists of digit
 --hexify :: String -> String
