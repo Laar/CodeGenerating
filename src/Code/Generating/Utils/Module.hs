@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Module (
+module Code.Generating.Utils.Module (
     emptyModule,
     emptyModule',
     exportVar, exportName,

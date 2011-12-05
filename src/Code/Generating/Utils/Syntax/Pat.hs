@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils.No
+-- Module      :  Code.Utils.Syntax.Pat
 -- Copyright   :
 -- License     :  AllRightsReserved
 --
@@ -12,19 +12,11 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.No (
-    noSrcLoc,
-    noBinds,
-    noContext,
+module Code.Generating.Utils.Syntax.Pat (
+    patVar,
 ) where
 
 import Language.Haskell.Exts.Syntax
 
-noContext :: Context
-noContext = []
-
-noSrcLoc :: SrcLoc
-noSrcLoc = error $ "no source location"
-
-noBinds :: Binds
-noBinds = BDecls []
+patVar :: String -> Pat
+patVar = PVar . Ident

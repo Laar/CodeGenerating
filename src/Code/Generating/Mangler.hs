@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Mangler (
+module Code.Generating.Mangler (
 --    hexify, hexifyAll,
 
     PPDirective,
@@ -25,7 +25,7 @@ module Code.Mangler (
 import Data.List
 
 
-import Code.Module(ModuleSource)
+import Code.Generating.Module(ModuleSource)
 
 -- | hexify a string, under the condition that it only consists of digit
 --hexify :: String -> String

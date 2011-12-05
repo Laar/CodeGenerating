@@ -1,0 +1,69 @@
+name: CodeGenerating
+version: 0.0.1
+cabal-version: -any
+build-type: Simple
+license: AllRightsReserved
+license-file: ""
+copyright:
+maintainer:
+build-depends: base -any, containers -any, directory -any,
+               filepath -any, haskell-src-exts >=1.11, mtl -any
+stability:
+homepage:
+package-url:
+bug-reports:
+synopsis:
+description: .
+category:
+author:
+tested-with:
+data-files:
+data-dir: ""
+extra-source-files:
+extra-tmp-files:
+exposed-modules: Code.Generating.Expressions 
+                 Code.Generating.Import 
+                 Code.Generating.Mangler
+                 Code.Generating.Module 
+                 Code.Generating.ModuleBuilder 
+                 Code.Generating.Package 
+                 Code.Generating.Utils
+exposed: True
+buildable: True
+build-tools:
+cpp-options:
+cc-options:
+ld-options:
+pkgconfig-depends:
+frameworks:
+c-sources:
+default-language:
+other-languages:
+default-extensions:
+other-extensions:
+extensions:
+extra-libraries:
+extra-lib-dirs:
+includes:
+install-includes:
+include-dirs:
+hs-source-dirs: src
+other-modules: Code.Generating.ModuleBuilder.Class
+               Code.Generating.ModuleBuilder.Module 
+               Code.Generating.ModuleBuilder.Package
+               Code.Generating.Utils.Unsorted 
+               Code.Generating.Utils.No 
+               Code.Generating.Utils.Module
+               Code.Generating.Utils.Syntax 
+               Code.Generating.Utils.Syntax.Decl 
+               Code.Generating.Utils.Syntax.Type
+               Code.Generating.Utils.Syntax.Pat 
+               Code.Generating.Utils.Syntax.Exp 
+               Code.Generating.Utils.Syntax.Alt
+               Code.Generating.Utils.Syntax.Names
+ghc-prof-options:
+ghc-shared-options:
+ghc-options: -Wall
+hugs-options:
+nhc98-options:
+jhc-options:

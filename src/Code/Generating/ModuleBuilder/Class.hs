@@ -17,7 +17,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.New.ModuleBuilder.Class (
+module Code.Generating.ModuleBuilder.Class (
     BuildableModule(..),
     ModuleBuilder(),
     runBuilder, execBuilder,

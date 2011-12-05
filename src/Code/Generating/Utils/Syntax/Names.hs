@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Syntax.Names (
+module Code.Generating.Utils.Syntax.Names (
     unQual, unQualS, qual,
     unname,
     unQName,

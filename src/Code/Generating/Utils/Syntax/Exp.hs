@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Syntax.Exp (
+module Code.Generating.Utils.Syntax.Exp (
     expVar, expCon, errorExp, otherwiseExp,
     eVar, eCon,
 
@@ -27,8 +27,8 @@ module Code.Utils.Syntax.Exp (
 
 import Language.Haskell.Exts.Syntax
 
-import Code.Utils.No
-import Code.Utils.Syntax.Names
+import Code.Generating.Utils.No
+import Code.Generating.Utils.Syntax.Names
 
 infixl 9 @@
 infixr 8 ...

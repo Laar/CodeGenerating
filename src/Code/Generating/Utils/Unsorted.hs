@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Unsorted (
+module Code.Generating.Utils.Unsorted (
     otherwiseRhs,
 
     enumConstructor,
@@ -21,9 +21,9 @@ module Code.Utils.Unsorted (
 
 import Language.Haskell.Exts.Syntax
 
-import Code.Utils.No
-import Code.Utils.Syntax.Exp
-import Code.Utils.Syntax.Names
+import Code.Generating.Utils.No
+import Code.Generating.Utils.Syntax.Exp
+import Code.Generating.Utils.Syntax.Names
 
 otherwiseRhs :: Exp -> GuardedRhs
 otherwiseRhs = GuardedRhs noSrcLoc  [Qualifier otherwiseExp]

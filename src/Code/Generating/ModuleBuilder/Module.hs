@@ -13,14 +13,14 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.New.ModuleBuilder.Module (
+module Code.Generating.ModuleBuilder.Module (
 
 ) where
 
 import Data.List(find)
 import Language.Haskell.Exts.Syntax
 
-import Code.New.ModuleBuilder.Class
+import Code.Generating.ModuleBuilder.Class
 
 instance BuildableModule Module where
     addBExport e (Module sl mn mp wt exs im dc) =

@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Import (
+module Code.Generating.Import (
     -- * module imports
     Import(..),
 

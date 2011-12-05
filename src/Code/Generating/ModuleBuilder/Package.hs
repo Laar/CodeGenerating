@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.New.ModuleBuilder.Package (
+module Code.Generating.ModuleBuilder.Package (
     PackageBuild(package),
     PackageBuilder,
     singlePackage,
@@ -28,8 +28,8 @@ module Code.New.ModuleBuilder.Package (
 import Control.Monad.State
 import Language.Haskell.Exts.Syntax
 
-import Code.New.Package
-import Code.New.ModuleBuilder.Class
+import Code.Generating.Package
+import Code.Generating.ModuleBuilder.Class
 
 data PackageBuild m
     = PackageBuild

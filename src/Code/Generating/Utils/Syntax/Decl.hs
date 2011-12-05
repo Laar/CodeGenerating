@@ -12,13 +12,13 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Syntax.Decl (
+module Code.Generating.Utils.Syntax.Decl (
     oneLineFun, oneLiner,
     oneTypeSig,
 ) where
 
 import Language.Haskell.Exts.Syntax
-import Code.Utils.No
+import Code.Generating.Utils.No
 
 oneLineFun :: Name -> [Pat] -> Rhs -> Binds -> Decl
 oneLineFun n ps rh bd = FunBind [Match noSrcLoc n ps Nothing rh bd]

@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Expressions (
+module Code.Generating.Expressions (
     replaceSubExp,
     etaReduce,
     specialeEtaReduce,
@@ -21,7 +21,7 @@ module Code.Expressions (
 
 ) where
 
-import Code.Utils
+import Code.Generating.Utils
 import Language.Haskell.Exts.Syntax
 
 replaceSubExp :: Exp -> Exp -> Exp -> Exp

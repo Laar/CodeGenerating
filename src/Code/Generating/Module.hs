@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Module (
+module Code.Generating.Module (
     ModuleSource,
 
     -- * module bodies
@@ -41,8 +41,8 @@ import qualified Data.Map as M
 
 import Language.Haskell.Exts.Syntax
 
-import Code.Import
-import Code.Utils
+import Code.Generating.Import
+import Code.Generating.Utils
 
 -----------------------------------------------------------------------------
 

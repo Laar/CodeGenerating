@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Utils.Syntax.Type (
+module Code.Generating.Utils.Syntax.Type (
     tCon, tyCon,
     tyVar, addIOType,
     (-->>),
@@ -21,7 +21,7 @@ module Code.Utils.Syntax.Type (
 
 import Language.Haskell.Exts.Syntax
 
-import Code.Utils.Syntax.Names
+import Code.Generating.Utils.Syntax.Names
 
 infixr 5 -->>
 

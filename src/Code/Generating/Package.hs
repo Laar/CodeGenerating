@@ -12,7 +12,7 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.New.Package (
+module Code.Generating.Package (
     Package(), Modulelike(..),
     emptyPackage,
 
@@ -35,7 +35,7 @@ import System.Directory
 import System.FilePath
 import Language.Haskell.Exts.Pretty(prettyPrint)
 import Language.Haskell.Exts.Syntax
-import Code.Utils
+import Code.Generating.Utils
 
 data Package m
     = Package
