@@ -19,6 +19,7 @@ module Code.Generating.ModuleBuilder.Package (
     liftPadjust,
     liftPquery,
     liftBuilder,
+    liftModBuilder, liftModBuilder',
     activateModule,
 
     addModuleAndActivate,
@@ -99,6 +100,28 @@ liftBuilder mb = do
     (r, am') <- lift  $ runBuilder am mb
     putActiveModule am'
     return r
+
+liftModBuilder :: (BuildableModule bm, Monad m)
+    => ModuleName -> ModuleBuilder bm m a -> PackageBuilder bm m (Maybe a)
+liftModBuilder mn mb = do
+    mMod <- liftPquery getModule mn
+    case mMod of
+        Nothing -> return Nothing
+        Just mo -> do
+                (r, mo') <- lift $ runBuilder mo mb
+                liftPadjust (changeModule mn (const mo'))
+                return $ Just r
+
+liftModBuilder' :: (BuildableModule bm, Monad m)
+    => ModuleName -> ModuleBuilder bm m () -> PackageBuilder bm m ()
+liftModBuilder' mn mb = do
+    mMod <- liftPquery getModule mn
+    case mMod of
+        Nothing -> return ()
+        Just mo -> do
+                (_, mo') <- lift $ runBuilder mo mb
+                liftPadjust (changeModule mn (const mo'))
+                return ()
 
 activateModule :: (BuildableModule bm, Monad m)
     => ModuleName -> PackageBuilder bm m ()
