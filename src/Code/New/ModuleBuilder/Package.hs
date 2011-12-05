@@ -20,6 +20,9 @@ module Code.New.ModuleBuilder.Package (
     liftPquery,
     liftBuilder,
     activateModule,
+
+    addModuleAndActivate,
+    defineModule
 ) where
 
 import Control.Monad.State
@@ -104,3 +107,17 @@ activateModule mn = do
     if not hm
      then error $ "Module " ++ show mn ++ " is not in the package"
      else liftAdjust $ \pb -> pb{activeMod = mn}
+
+addModuleAndActivate :: (BuildableModule bm, Modulelike bm, Monad m)
+     => ModuleName -> Bool -> PackageBuilder bm m ()
+addModuleAndActivate mn ext = do
+    hasMod <- liftPquery hasModule mn
+    when (not hasMod) $ do
+        liftPadjust $ if ext then addExternalModule' mn else addInternalModule' mn
+    activateModule mn
+
+defineModule :: (BuildableModule bm, Modulelike bm, Monad m)
+    => ModuleName -> Bool -> ModuleBuilder bm m a -> PackageBuilder bm m a
+defineModule mn loc bm = do
+    addModuleAndActivate mn loc
+    liftBuilder bm
