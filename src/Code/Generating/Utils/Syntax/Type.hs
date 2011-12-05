@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils.Syntax.Type
--- Copyright   :
--- License     :  AllRightsReserved
+-- Module      :  Code.Generating.Utils.Syntax.Type
+-- Copyright   :  (c) 2011 Lars Corbijn
+-- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :

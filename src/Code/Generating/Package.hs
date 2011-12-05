@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.New.Package
--- Copyright   :
--- License     :  AllRightsReserved
+-- Module      :  Code.Generating.Package
+-- Copyright   :  (c) 2011 Lars Corbijn
+-- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :

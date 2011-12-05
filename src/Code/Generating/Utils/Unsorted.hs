@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils.Unsorted
--- Copyright   :
--- License     :  AllRightsReserved
+-- Module      :  Code.Generating.Utils.Unsorted
+-- Copyright   :  (c) 2011 Lars Corbijn
+-- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :

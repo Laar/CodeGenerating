@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Utils.Syntax.Pat
--- Copyright   :
--- License     :  AllRightsReserved
+-- Module      :  Code.Generating.Utils.Syntax.Pat
+-- Copyright   :  (c) 2011 Lars Corbijn
+-- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :

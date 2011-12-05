@@ -1,9 +1,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.New.ModuleBuilder.Module
--- Copyright   :
--- License     :  AllRightsReserved
+-- Module      :  Code.Generating.ModuleBuilder.Module
+-- Copyright   :  (c) 2011 Lars Corbijn
+-- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :
