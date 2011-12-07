@@ -1,0 +1,11 @@
+0123456789012345678901234567890123456789012345678901234567890123456789012
+CodeGenerating is a library which aims to improve generating haskell, as
+represented by the haskell-src-extspackage. The package is very unstable
+and immature.
+
+The package currently has two major parts. In Code.Generating.Utils there
+are a lot of helper function for creating source. This is the most stable
+part of the library. The second part of the library is the ModuleBuilder
+found in Code.Generating.ModuleBuilder, which tries to make module and
+package building easier through wrapping the StateT monad into the 
+ModuleBuilder monad.
