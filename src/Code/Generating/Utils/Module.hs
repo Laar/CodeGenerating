@@ -17,6 +17,8 @@ module Code.Generating.Utils.Module (
     emptyModule',
     exportVar, exportName,
 
+    importAll, partialImport,
+
     moduleToModuleName, moduleNameToName, moduleToName,
 
     addModulePragmas,
@@ -26,6 +28,7 @@ module Code.Generating.Utils.Module (
 import Data.List(nub)
 import System.FilePath(pathSeparator)
 import Language.Haskell.Exts.Syntax
+import Code.Generating.Utils.No
 
 emptyModule :: ModuleName -> Module
 emptyModule name = Module undefined name [] Nothing (Just []) [] []
@@ -58,3 +61,14 @@ exportVar = EVar . UnQual . Ident
 
 exportName :: Name -> ExportSpec
 exportName = EVar . UnQual
+
+-- | Make an import for a module importing all content, e.g.
+-- > import Data.List
+importAll :: ModuleName -> ImportDecl
+importAll name = ImportDecl noSrcLoc name False False Nothing Nothing Nothing
+
+-- | Make an import for a module restricted to the given import spec, e.g.
+-- > import Data.List(nub)
+partialImport :: ModuleName -> [ImportSpec] -> ImportDecl
+partialImport name imports =
+    ImportDecl noSrcLoc name False False Nothing Nothing (Just (False, imports))
