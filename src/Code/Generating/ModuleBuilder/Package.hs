@@ -8,7 +8,7 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | Generalizing `BuildableModule` to `Package`.
 --
 -----------------------------------------------------------------------------
 
@@ -26,17 +26,23 @@ module Code.Generating.ModuleBuilder.Package (
     defineModule
 ) where
 
+-----------------------------------------------------------------------------
+
 import Control.Monad.State
 import Language.Haskell.Exts.Syntax
 
 import Code.Generating.Package
 import Code.Generating.ModuleBuilder.Class
 
+-----------------------------------------------------------------------------
+
 data PackageBuild m
     = PackageBuild
     { package   :: Package m
     , activeMod :: ModuleName
     }
+
+-----------------------------------------------------------------------------
 
 singlePackage :: (Modulelike m, BuildableModule m) => m -> PackageBuild m
 singlePackage bm = PackageBuild (addExternalModule bm emptyPackage) (getModuleName bm)
@@ -68,6 +74,8 @@ instance BuildableModule m => BuildableModule (PackageBuild m) where
 
 type PackageBuilder bm m a = ModuleBuilder (PackageBuild bm) m a
 
+-----------------------------------------------------------------------------
+
 liftPadjust :: (BuildableModule bm, Monad m)
     => (Package bm -> Package bm) -> PackageBuilder bm m ()
 liftPadjust f = liftAdjust (adjustPackage f)
@@ -92,6 +100,8 @@ putActiveModule :: (BuildableModule bm, Monad m)
 putActiveModule bm = do
     amn <- getActiveMod
     liftPadjust $ changeModule amn (\_ -> bm)
+
+-----------------------------------------------------------------------------
 
 liftBuilder :: (BuildableModule bm, Monad m)
     => ModuleBuilder bm m a -> PackageBuilder bm m a
@@ -123,6 +133,8 @@ liftModBuilder' mn mb = do
                 liftPadjust (changeModule mn (const mo'))
                 return ()
 
+-----------------------------------------------------------------------------
+
 activateModule :: (BuildableModule bm, Monad m)
     => ModuleName -> PackageBuilder bm m ()
 activateModule mn = do
@@ -144,3 +156,5 @@ defineModule :: (BuildableModule bm, Modulelike bm, Monad m)
 defineModule mn loc bm = do
     addModuleAndActivate mn loc
     liftBuilder bm
+
+-----------------------------------------------------------------------------

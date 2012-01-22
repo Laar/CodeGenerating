@@ -13,7 +13,8 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | This module groups the modules under the Code.Generating.ModuleBuilder
+-- namespace for easy importing.
 --
 -----------------------------------------------------------------------------
 
@@ -23,6 +24,10 @@ module Code.Generating.ModuleBuilder (
     module Code.Generating.ModuleBuilder.Package
 ) where
 
+-----------------------------------------------------------------------------
+
 import Code.Generating.ModuleBuilder.Class
 import Code.Generating.ModuleBuilder.Module() -- for the future
 import Code.Generating.ModuleBuilder.Package
+
+-----------------------------------------------------------------------------

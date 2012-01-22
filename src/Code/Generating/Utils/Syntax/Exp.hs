@@ -25,10 +25,14 @@ module Code.Generating.Utils.Syntax.Exp (
 
 ) where
 
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
 
 import Code.Generating.Utils.No
 import Code.Generating.Utils.Syntax.Names
+
+-----------------------------------------------------------------------------
 
 infixl 9 @@
 infixr 8 ...
@@ -77,3 +81,5 @@ otherwiseExp = expVar "otherwise"
 
 infixAppS :: String -> Exp -> Exp -> Exp
 infixAppS inf ex1 ex2 = InfixApp ex1 (QVarOp $ unQualS inf) ex2
+
+-----------------------------------------------------------------------------

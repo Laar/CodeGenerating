@@ -8,7 +8,8 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | This namespace defines a large amount of helper function for generating
+-- haskell-src-exts syntax trees. All these functions are exported from here.
 --
 -----------------------------------------------------------------------------
 
@@ -21,7 +22,11 @@ module Code.Generating.Utils (
     module Code.Generating.Utils.Unsorted,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Code.Generating.Utils.Module
 import Code.Generating.Utils.No
 import Code.Generating.Utils.Syntax
 import Code.Generating.Utils.Unsorted
+
+-----------------------------------------------------------------------------

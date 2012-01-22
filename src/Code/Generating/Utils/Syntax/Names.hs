@@ -19,7 +19,11 @@ module Code.Generating.Utils.Syntax.Names (
     unCName,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
+
+-----------------------------------------------------------------------------
 
 unQual :: String -> QName
 unQual = UnQual . Ident
@@ -42,3 +46,5 @@ unQName (Special _) = error $ "unQName: can't unQualify a special con"
 unCName :: CName -> Name
 unCName (VarName n) = n
 unCName (ConName n) = n
+
+-----------------------------------------------------------------------------

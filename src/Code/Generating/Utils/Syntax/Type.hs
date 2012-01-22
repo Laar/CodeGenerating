@@ -19,9 +19,13 @@ module Code.Generating.Utils.Syntax.Type (
     unBangType,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
 
 import Code.Generating.Utils.Syntax.Names
+
+-----------------------------------------------------------------------------
 
 infixr 5 -->>
 
@@ -45,3 +49,5 @@ unBangType :: BangType -> Type
 unBangType (UnBangedTy t) = t
 unBangType (BangedTy   t) = t
 unBangType (UnpackedTy t) = t
+
+-----------------------------------------------------------------------------
