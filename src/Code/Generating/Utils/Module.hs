@@ -15,7 +15,7 @@
 module Code.Generating.Utils.Module (
     emptyModule,
     emptyModule',
-    exportVar, exportName,
+    eVar, eVar',
 
     importAll, partialImport,
 
@@ -62,11 +62,11 @@ moduleNameToPath (ModuleName n) = foldr replace [] n
         replace  c  p = c : p
 
 
-exportVar :: String -> ExportSpec
-exportVar = EVar . UnQual . Ident
+eVar' :: String -> ExportSpec
+eVar' = EVar . UnQual . Ident
 
-exportName :: Name -> ExportSpec
-exportName = EVar . UnQual
+eVar :: Name -> ExportSpec
+eVar = EVar . UnQual
 
 -- | Make an import for a module importing all content, e.g.
 -- > import Data.List

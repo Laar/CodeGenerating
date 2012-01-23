@@ -13,7 +13,7 @@
 -----------------------------------------------------------------------------
 
 module Code.Generating.Utils.Syntax.Names (
-    unQual, unQualS, qual,
+    unQual', unQualSym', qual,
     unname,
     unQName,
     unCName,
@@ -25,11 +25,11 @@ import Language.Haskell.Exts.Syntax
 
 -----------------------------------------------------------------------------
 
-unQual :: String -> QName
-unQual = UnQual . Ident
+unQual' :: String -> QName
+unQual' = UnQual . Ident
 
-unQualS :: String -> QName
-unQualS = UnQual . Symbol
+unQualSym' :: String -> QName
+unQualSym' = UnQual . Symbol
 
 qual :: ModuleName -> String -> QName
 qual name = Qual name . Ident

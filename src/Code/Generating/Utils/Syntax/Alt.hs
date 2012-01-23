@@ -13,7 +13,7 @@
 -----------------------------------------------------------------------------
 
 module Code.Generating.Utils.Syntax.Alt (
-    toAlt, toAlt',
+    toAlt, toAltTup,
 ) where
 
 -----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ import Code.Generating.Utils.No
 toAlt :: Pat -> Exp -> Alt
 toAlt p e = Alt noSrcLoc p (UnGuardedAlt e) (BDecls [])
 
-toAlt' :: (Pat, Exp) -> Alt
-toAlt' = uncurry toAlt
+toAltTup :: (Pat, Exp) -> Alt
+toAltTup = uncurry toAlt
 
 -----------------------------------------------------------------------------

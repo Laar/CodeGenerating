@@ -16,7 +16,7 @@ module Code.Generating.Utils.Unsorted (
     otherwiseRhs,
 
     nullaryConstructor,
-    derive,
+    derive, derive',
 ) where
 
 -----------------------------------------------------------------------------
@@ -36,7 +36,10 @@ otherwiseRhs = GuardedRhs noSrcLoc  [Qualifier otherwiseExp]
 nullaryConstructor :: Name -> QualConDecl
 nullaryConstructor name = QualConDecl noSrcLoc [] [] $ ConDecl name []
 
-derive :: String -> Deriving
-derive n = (unQual n, [])
+derive :: Name -> Deriving
+derive n = (UnQual n, [])
+
+derive' :: String -> Deriving
+derive' n = (unQual' n, [])
 
 -----------------------------------------------------------------------------
