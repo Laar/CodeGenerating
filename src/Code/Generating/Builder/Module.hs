@@ -1,26 +1,26 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Generating.ModuleBuilder.Module
--- Copyright   :  (c) 2011 Lars Corbijn
+-- Module      :  Code.Generating.Builder.Module
+-- Copyright   :  (c) 2011-2012 Lars Corbijn
 -- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
 -- Stability   :
 -- Portability :
 --
--- | Unused
+-- | Instance of `BuildableModule` for `Module`
 --
 -----------------------------------------------------------------------------
 
-module Code.Generating.ModuleBuilder.Module (
+module Code.Generating.Builder.Module (
 
 ) where
 
 import Data.List(find)
 import Language.Haskell.Exts.Syntax
 
-import Code.Generating.ModuleBuilder.Class
+import Code.Generating.Builder.ModuleBuilder
 
 instance BuildableModule Module where
     addBExport e (Module sl mn mp wt exs im dc) =
@@ -33,7 +33,7 @@ instance BuildableModule Module where
     addBImport i (Module sl mn mp wt exs im dc) = Module sl mn mp wt exs (addImportD i im) dc
     addBPragma p (Module sl mn mp wt exs im dc) = Module sl mn (p:mp) wt exs im dc
     getBImport i (Module _  _  _  _  _   im _ ) = find (\im' -> importModule im' == i) im
-    hasBPragma p (Module _  _  mp _  _   _  _ ) = p `elem` mp -- TODO is == defined right for this
+    hasBPragma p (Module _  _  mp _  _   _  _ ) = p `elem` mp -- TODO is (==) defined right for this
 
 addImportD :: ImportDecl -> [ImportDecl] -> [ImportDecl]
 addImportD i = go

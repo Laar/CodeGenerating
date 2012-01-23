@@ -5,8 +5,8 @@
  #-}
 -----------------------------------------------------------------------------
 --
--- Module      :  Code.Generating.ModuleBuilder
--- Copyright   :  (c) 2011 Lars Corbijn
+-- Module      :  Code.Generating.Builder
+-- Copyright   :  (c) 2011-2012 Lars Corbijn
 -- License     :  BSD-style (see the file /LICENSE)
 --
 -- Maintainer  :
@@ -18,16 +18,16 @@
 --
 -----------------------------------------------------------------------------
 
-module Code.Generating.ModuleBuilder (
-    module Code.Generating.ModuleBuilder.Class,
+module Code.Generating.Builder (
 --    module Code.New.ModuleBuilder.Module, -- for the future
-    module Code.Generating.ModuleBuilder.Package
+    module Code.Generating.Builder.ModuleBuilder,
+    module Code.Generating.Builder.Package
 ) where
 
 -----------------------------------------------------------------------------
 
-import Code.Generating.ModuleBuilder.Class
-import Code.Generating.ModuleBuilder.Module() -- for the future
-import Code.Generating.ModuleBuilder.Package
+import Code.Generating.Builder.Module() -- for the future
+import Code.Generating.Builder.ModuleBuilder
+import Code.Generating.Builder.Package
 
 -----------------------------------------------------------------------------
