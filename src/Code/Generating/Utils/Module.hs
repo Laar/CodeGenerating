@@ -8,14 +8,14 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | Module related helper functions
 --
 -----------------------------------------------------------------------------
 
 module Code.Generating.Utils.Module (
     emptyModule,
     emptyModule',
-    exportVar, exportName,
+    eVar, eVar',
 
     importAll, partialImport,
 
@@ -25,10 +25,14 @@ module Code.Generating.Utils.Module (
     moduleNameToPath,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Data.List(nub)
 import System.FilePath(pathSeparator)
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.No
+
+-----------------------------------------------------------------------------
 
 emptyModule :: ModuleName -> Module
 emptyModule name = Module undefined name [] Nothing (Just []) [] []
@@ -39,6 +43,7 @@ emptyModule' = emptyModule . ModuleName
 moduleToModuleName :: Module -> ModuleName
 moduleToModuleName (Module _ name _ _ _ _ _) = name
 
+-- | Deconstructing of ModuleName
 moduleNameToName :: ModuleName -> String
 moduleNameToName (ModuleName name) = name
 
@@ -49,6 +54,7 @@ addModulePragmas :: [ModulePragma] -> Module -> Module
 addModulePragmas prags (Module srcl name prag wt ex im decls) =
     Module srcl name (nub (prags ++ prag)) wt ex im decls
 
+-- | Converts the module name to the path of it's source code.
 moduleNameToPath :: ModuleName -> FilePath
 moduleNameToPath (ModuleName n) = foldr replace [] n
     where
@@ -56,11 +62,11 @@ moduleNameToPath (ModuleName n) = foldr replace [] n
         replace  c  p = c : p
 
 
-exportVar :: String -> ExportSpec
-exportVar = EVar . UnQual . Ident
+eVar' :: String -> ExportSpec
+eVar' = EVar . UnQual . Ident
 
-exportName :: Name -> ExportSpec
-exportName = EVar . UnQual
+eVar :: Name -> ExportSpec
+eVar = EVar . UnQual
 
 -- | Make an import for a module importing all content, e.g.
 -- > import Data.List
@@ -72,3 +78,5 @@ importAll name = ImportDecl noSrcLoc name False False Nothing Nothing Nothing
 partialImport :: ModuleName -> [ImportSpec] -> ImportDecl
 partialImport name imports =
     ImportDecl noSrcLoc name False False Nothing Nothing (Just (False, imports))
+
+-----------------------------------------------------------------------------

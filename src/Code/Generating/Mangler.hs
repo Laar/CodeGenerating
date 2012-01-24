@@ -8,7 +8,9 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | Changes code after it has been printed to text. This is needed as some
+-- code parts cannot be modeled by haskel-src-exts, such as preprocessor
+-- directives and macros.
 --
 -----------------------------------------------------------------------------
 
@@ -23,8 +25,11 @@ module Code.Generating.Mangler (
     ModuleSource,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Data.List
 
+-----------------------------------------------------------------------------
 
 type ModuleSource = String
 
@@ -56,8 +61,9 @@ addafterImport ppds msc=
               isEmptyLine  = all (\x-> x `elem` " \t")
               formatedPPDs = concatMap ('\n':) ppds
 
-
 type Macro = String
 
 appendMacros :: [Macro] -> ModuleSource -> ModuleSource
 appendMacros macros msc =  msc ++ ('\n' : concatMap ('\n':) macros)
+
+-----------------------------------------------------------------------------

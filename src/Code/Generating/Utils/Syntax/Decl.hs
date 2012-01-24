@@ -17,8 +17,12 @@ module Code.Generating.Utils.Syntax.Decl (
     oneTypeSig,
 ) where
 
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.No
+
+-----------------------------------------------------------------------------
 
 oneLineFun :: Name -> [Pat] -> Rhs -> Binds -> Decl
 oneLineFun n ps rh bd = FunBind [Match noSrcLoc n ps Nothing rh bd]
@@ -28,3 +32,5 @@ oneLiner n ps e = oneLineFun n ps (UnGuardedRhs e) noBinds
 
 oneTypeSig :: Name -> Type -> Decl
 oneTypeSig n t = TypeSig noSrcLoc [n] t
+
+-----------------------------------------------------------------------------

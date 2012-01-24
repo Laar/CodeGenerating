@@ -13,8 +13,8 @@
 -----------------------------------------------------------------------------
 
 module Code.Generating.Utils.Syntax.Exp (
-    expVar, expCon, errorExp, otherwiseExp,
-    eVar, eCon,
+    var', con', errorExp, otherwiseExp,
+    var, con,
 
     (@@), (\->),
     (.$.), (...),
@@ -25,10 +25,14 @@ module Code.Generating.Utils.Syntax.Exp (
 
 ) where
 
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
 
 import Code.Generating.Utils.No
 import Code.Generating.Utils.Syntax.Names
+
+-----------------------------------------------------------------------------
 
 infixl 9 @@
 infixr 8 ...
@@ -36,23 +40,23 @@ infixr 5 +@+
 infix  4 =@=, /@=
 infixr 0 .$.
 
-expVar :: String -> Exp
-expVar = Var . unQual
+var' :: String -> Exp
+var' = Var . unQual'
 
-eVar :: Name -> Exp
-eVar = Var . UnQual
+var :: Name -> Exp
+var = Var . UnQual
 
-expCon :: String -> Exp
-expCon = Con . unQual
+con' :: String -> Exp
+con' = Con . unQual'
 
-eCon :: Name -> Exp
-eCon = Con . UnQual
+con :: Name -> Exp
+con = Con . UnQual
 
 errorExp :: String -> Exp
-errorExp = App (expVar "error") . Lit . String
+errorExp = App (var' "error") . Lit . String
 
 otherwiseExp :: Exp
-otherwiseExp = expVar "otherwise"
+otherwiseExp = var' "otherwise"
 
 -- Opperators
 
@@ -76,4 +80,6 @@ otherwiseExp = expVar "otherwise"
 (\->) = Lambda noSrcLoc
 
 infixAppS :: String -> Exp -> Exp -> Exp
-infixAppS inf ex1 ex2 = InfixApp ex1 (QVarOp $ unQualS inf) ex2
+infixAppS inf ex1 ex2 = InfixApp ex1 (QVarOp $ unQualSym' inf) ex2
+
+-----------------------------------------------------------------------------

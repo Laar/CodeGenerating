@@ -8,7 +8,9 @@
 -- Stability   :
 -- Portability :
 --
--- |
+-- | Several modules are grouped in a package, this module provides such a
+-- grouping in the form of `Package`, It allows to add and change modules
+-- and other modifications.
 --
 -----------------------------------------------------------------------------
 
@@ -27,15 +29,22 @@ module Code.Generating.Package (
     processModules,
     processModules',
     writeModules,
-    safeWriteFile, -- Shame on you
+
+    safeWriteFile,
 ) where
+
+-----------------------------------------------------------------------------
 
 import qualified Data.Map as M
 import System.Directory
 import System.FilePath
+
 import Language.Haskell.Exts.Pretty(prettyPrint)
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils
+
+
+-----------------------------------------------------------------------------
 
 data Package m
     = Package
@@ -54,7 +63,7 @@ instance Modulelike Module where
 emptyPackage :: Modulelike p => Package p
 emptyPackage = Package M.empty M.empty
 
-
+-----------------------------------------------------------------------------
 
 addInternalModule :: Modulelike m => m -> Package m -> Package m
 addInternalModule m p = p{internalMods = M.insert name m $ internalMods p}
@@ -105,7 +114,13 @@ writeModules :: FilePath -> Package Module -> IO ()
 writeModules fp = processModules' writeModule
     where
         writeModule mn m = safeWriteFile (fp </> moduleNameToPath mn <.> "hs") (prettyPrint m)
---        safeWriteFile fp' fc = createDirectoryIfMissing True (dropFileName fp') >> writeFile fp' fc
 
+-----------------------------------------------------------------------------
+
+-- | `safeWriteFile` is an extended version of writefile that also creates
+-- the directory to a file if it does not yet exist.
 safeWriteFile :: FilePath -> String -> IO ()
-safeWriteFile fp' fc = createDirectoryIfMissing True (dropFileName fp') >> writeFile fp' fc
+safeWriteFile fp' fc = createDirectoryIfMissing True (dropFileName fp')
+    >> writeFile fp' fc
+
+-----------------------------------------------------------------------------
