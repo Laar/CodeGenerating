@@ -13,6 +13,7 @@
 -----------------------------------------------------------------------------
 
 module Code.Generating.Utils.Syntax.Names (
+    qual',
     unQual', unQualSym', qual,
     unname,
     unQName,
@@ -46,5 +47,25 @@ unQName (Special _) = error $ "unQName: can't unQualify a special con"
 unCName :: CName -> Name
 unCName (VarName n) = n
 unCName (ConName n) = n
+
+-- | Makes a `QName` from a string, this string can contain a fully
+-- qualified name and symbols which all will be parsed correctly.
+-- SpecialCon is not handled correctly
+qual' :: String -> QName
+qual' n =
+    let rn@(c:_) = reverse n
+    in case c of
+        ')' ->  let (rsym, rrest) = break (== '(') rn
+                    sym = Symbol $ '('  : reverse rsym
+                in case rrest of
+                    ['(']       -> UnQual sym
+                    ('(':'.':_) -> Qual (ModuleName . reverse . tail $ tail rrest) sym
+                    _           -> error $ "qual': illegal input " ++ show n
+        _   ->  let (rname, rmodu) =  break (== '.') rn
+                    name = Ident $ reverse rname
+                in case rmodu of
+                    [] -> UnQual name
+                    rmod ->  Qual (ModuleName . reverse $ tail rmod) name
+
 
 -----------------------------------------------------------------------------
