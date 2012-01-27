@@ -22,6 +22,7 @@ module Code.Generating.Utils.Syntax.Names (
 
 -----------------------------------------------------------------------------
 
+import Control.Arrow(first)
 import Language.Haskell.Exts.Syntax
 
 -----------------------------------------------------------------------------
@@ -52,20 +53,28 @@ unCName (ConName n) = n
 -- qualified name and symbols which all will be parsed correctly.
 -- SpecialCon is not handled correctly
 qual' :: String -> QName
+qual' ('(':nr) = case reverse nr of
+    [] -> error "qual' only a '('"
+    (')':n) -> case symModSplit (reverse n) of
+        ([], s) -> UnQual . Symbol $ s
+        ( m, s) -> Qual (ModuleName m) (Symbol s)
+    _ -> error "qual' unmatched '('"
 qual' n =
-    let rn@(c:_) = reverse n
-    in case c of
-        ')' ->  let (rsym, rrest) = break (== '(') rn
-                    sym = Symbol $ '('  : reverse rsym
-                in case rrest of
-                    ['(']       -> UnQual sym
-                    ('(':'.':_) -> Qual (ModuleName . reverse . tail $ tail rrest) sym
-                    _           -> error $ "qual': illegal input " ++ show n
-        _   ->  let (rname, rmodu) =  break (== '.') rn
-                    name = Ident $ reverse rname
-                in case rmodu of
-                    [] -> UnQual name
-                    rmod ->  Qual (ModuleName . reverse $ tail rmod) name
+    let (rname, rmodu) =  break (== '.') $ reverse n
+        name = Ident $ reverse rname
+    in case rmodu of
+        [] -> UnQual name
+        rmod ->  Qual (ModuleName . reverse $ tail rmod) name
 
 
+symModSplit :: String -> (String, String)
+symModSplit n =
+    let modrest = span (`elem` nonSyms) n
+    in case modrest of
+        ([], _) -> modrest
+        (m, '.':r) -> first (\m' -> m ++ (if null m' then id else ('.':) ) m')
+                        $ symModSplit r
+        _ -> error $ "Module part not followed by symbol in (" ++ show n ++ ")"
+    where
+        nonSyms = ['A'..'z'] ++ ['0'..'9'] ++ "_"
 -----------------------------------------------------------------------------
