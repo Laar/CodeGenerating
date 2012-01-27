@@ -17,10 +17,13 @@ module Code.Generating.Builder.Module (
 
 ) where
 
-import Data.List(find)
+-----------------------------------------------------------------------------
+
 import Language.Haskell.Exts.Syntax
 
 import Code.Generating.Builder.ModuleBuilder
+
+-----------------------------------------------------------------------------
 
 instance BuildableModule Module where
     addBExport e (Module sl mn mp wt exs im dc) =
@@ -32,8 +35,10 @@ instance BuildableModule Module where
     addBDecls d  (Module sl mn mp wt exs im dc) = Module sl mn mp wt exs im (d ++ dc)
     addBImport i (Module sl mn mp wt exs im dc) = Module sl mn mp wt exs (addImportD i im) dc
     addBPragma p (Module sl mn mp wt exs im dc) = Module sl mn (p:mp) wt exs im dc
-    getBImport i (Module _  _  _  _  _   im _ ) = find (\im' -> importModule im' == i) im
+    getBImport i (Module _  _  _  _  _   im _ ) = filter (\im' -> importModule im' == i) im
     hasBPragma p (Module _  _  mp _  _   _  _ ) = p `elem` mp -- TODO is (==) defined right for this
+
+-----------------------------------------------------------------------------
 
 addImportD :: ImportDecl -> [ImportDecl] -> [ImportDecl]
 addImportD i = go
@@ -54,3 +59,5 @@ tryMergeDecls _ i@(ImportDecl _ _ _ _ _ _ Nothing) = Just i
 tryMergeDecls (ImportDecl l mn q s p a (Just (h1, sp1))) (ImportDecl _ _ _ _ _ _ (Just (h2, sp2)))
     | h1 == h2  = Just $ ImportDecl l mn q s p a (Just (h1, sp1 ++ sp2))
     | otherwise = Nothing -- Just to be sure
+
+-----------------------------------------------------------------------------

@@ -65,7 +65,7 @@ liftPquery f v = gets (f v . packages)
 -----------------------------------------------------------------------------
 
 liftModBuilder :: (BuildableModule bm, Monad m)
-    => ModuleName -> ModuleBuilder bm m a -> PackageBuilder bm m (Maybe a)
+    => ModuleName -> SModuleBuilder bm m a -> PackageBuilder bm m (Maybe a)
 liftModBuilder mn mb = do
     mMod <- liftPquery getModule mn
     case mMod of
@@ -89,7 +89,7 @@ addModule mn ext = do
         liftPadjust $ if ext then addExternalModule' mn else addInternalModule' mn
 
 defineModule :: (BuildableModule bm, Modulelike bm, Monad m)
-    => ModuleName -> Bool -> ModuleBuilder bm m a -> PackageBuilder bm m a
+    => ModuleName -> Bool -> SModuleBuilder bm m a -> PackageBuilder bm m a
 defineModule mn loc bm = do
     addModule mn loc
     liftModBuilder mn bm >>= return . fromMaybe (error $ "Module not added")
