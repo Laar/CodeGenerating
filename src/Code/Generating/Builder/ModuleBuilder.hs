@@ -16,6 +16,9 @@
 -----------------------------------------------------------------------------
 
 module Code.Generating.Builder.ModuleBuilder (
+    SinglePragma(..),
+    modulePragmaToSingles, singleToModulePragma, pragmaExtends,
+
     BuildableModule(..),
     ModuleBuilder(),
     SModuleBuilder,
@@ -33,6 +36,32 @@ module Code.Generating.Builder.ModuleBuilder (
 import Control.Monad.State
 
 import Language.Haskell.Exts.Syntax
+import Code.Generating.Utils
+
+-----------------------------------------------------------------------------
+
+data SinglePragma
+    = LanguageP Name
+    | OptionsP (Maybe Tool) String
+    | AnnotationP Annotation
+    deriving(Eq, Ord, Show)
+
+singleToModulePragma :: SinglePragma -> ModulePragma
+singleToModulePragma sp = case sp of
+    LanguageP   n       -> LanguagePragma   noSrcLoc [n]
+    OptionsP    mt s    -> OptionsPragma    noSrcLoc mt s
+    AnnotationP a       -> AnnModulePragma  noSrcLoc a
+
+modulePragmaToSingles :: ModulePragma -> [SinglePragma]
+modulePragmaToSingles mp = case mp of
+    LanguagePragma  _ ps    -> map LanguageP ps
+    OptionsPragma   _ mt s  -> [OptionsP mt s]
+    AnnModulePragma _ a     -> [AnnotationP a]
+
+pragmaExtends :: SinglePragma -> SinglePragma -> Bool
+pragmaExtends p1 p2 | p1 == p2 = True
+pragmaExtends (OptionsP (Just _) s1) (OptionsP Nothing s2) = s1 == s2
+pragmaExtends _  _ = False
 
 -----------------------------------------------------------------------------
 
@@ -40,9 +69,9 @@ class BuildableModule b where
     addBExport   :: ExportSpec   -> b -> b
     addBDecls    :: [Decl]       -> b -> b
     addBImport   :: ImportDecl   -> b -> b
-    addBPragma   :: ModulePragma -> b -> b
+    addBPragma   :: SinglePragma -> b -> b
     getBImport   :: ModuleName   -> b -> [ImportDecl]
-    hasBPragma   :: ModulePragma -> b -> Bool
+    hasBPragma   :: SinglePragma -> b -> Bool
 
 -----------------------------------------------------------------------------
 
@@ -50,9 +79,9 @@ class Monad m => ModuleBuilder m where
     addExport :: ExportSpec     -> m ()
     addDecls  :: [Decl]         -> m ()
     addImport :: ImportDecl     -> m ()
-    addPragma :: ModulePragma   -> m ()
+    addPragma :: SinglePragma   -> m ()
     getImport :: ModuleName     -> m [ImportDecl]
-    hasPragma :: ModulePragma   -> m Bool
+    hasPragma :: SinglePragma   -> m Bool
 
 addDecl :: ModuleBuilder m => Decl -> m ()
 addDecl d = addDecls [d]
