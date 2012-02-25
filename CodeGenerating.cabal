@@ -33,6 +33,7 @@ Test-suite tests
   Type:           exitcode-stdio-1.0
   Hs-source-dirs: tests
   Main-is:        Tests.hs
+  Other-modules:  Utils.Type
   Build-depends:  CodeGenerating,
                   base >= 4.0 && < 5,
                   test-framework >= 0.5 && < 0.6,

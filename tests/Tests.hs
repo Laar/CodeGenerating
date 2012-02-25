@@ -18,6 +18,8 @@ module Main (main) where
 
 import Test.Framework (Test, defaultMain)
 
+import Utils.Type
+
 ------------------------------------------------------------------------
 
 main :: IO ()
@@ -25,5 +27,7 @@ main = defaultMain tests
 
 tests :: [Test]
 tests =
-    [
+    [ typeTest
     ]
+
+------------------------------------------------------------------------
