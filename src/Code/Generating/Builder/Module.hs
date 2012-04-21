@@ -34,9 +34,11 @@ instance BuildableModule Module where
                 Nothing -> Nothing -- TODO what should be done here?
     addBDecls d  (Module sl mn mp wt exs im dc) = Module sl mn mp wt exs im (d ++ dc)
     addBImport i (Module sl mn mp wt exs im dc) = Module sl mn mp wt exs (addImportD i im) dc
-    addBPragma p (Module sl mn mp wt exs im dc) = Module sl mn (p:mp) wt exs im dc
+    addBPragma p (Module sl mn mp wt exs im dc) = Module sl mn (mp') wt exs im dc
+        where mp' = singleToModulePragma p : mp -- TODO, improve, undup?
     getBImport i (Module _  _  _  _  _   im _ ) = filter (\im' -> importModule im' == i) im
-    hasBPragma p (Module _  _  mp _  _   _  _ ) = p `elem` mp -- TODO is (==) defined right for this
+    hasBPragma p (Module _  _  mp _  _   _  _ ) =
+        any (pragmaExtends p) $ concatMap modulePragmaToSingles mp
 
 -----------------------------------------------------------------------------
 
