@@ -26,7 +26,8 @@ Library
                  Code.Generating.Utils.Syntax.Pat Code.Generating.Utils.Syntax.Exp
                  Code.Generating.Utils.Syntax.Alt Code.Generating.Utils.Syntax.Names
                  Code.Generating.Builder.ModuleBuilder
-                 Code.Generating.Builder.Module Code.Generating.Builder.Package
+                 Code.Generating.Builder.Module Code.Generating.Builder.Package,
+                 Code.Generating.Utils.Imports
   Ghc-options: -Wall
 
 Test-suite tests
