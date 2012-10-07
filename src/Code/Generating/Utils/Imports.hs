@@ -1,11 +1,15 @@
 module Code.Generating.Utils.Imports (
     importSpecUnion, importSpecIntersect,
     ImportSpecDiff(..), importSpecDifference,
+
+    addIncludeSpec, mergeIncludeSpec,
+    mergeHidingSpec, mergeHideIncludeSpec,
 ) where
 
 -----------------------------------------------------------------------
 
-import Data.List(union, intersect, nub, (\\))
+import Data.List(union, intersect, nub, (\\), foldl')
+import Data.Maybe(isJust, fromJust)
 
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.Syntax.Names
@@ -25,6 +29,38 @@ mergeUpdate f e = go
 
 nameEq :: Name -> Name -> e -> Maybe e
 nameEq n1 n2 e = if n1 == n2 then Just e else Nothing
+
+-----------------------------------------------------------------------
+
+mergeHidingSpec :: [ImportSpec] -> [ImportSpec] -> [ImportSpec]
+mergeHidingSpec is1 is2
+    = [fromJust i
+         | i1 <- is1
+         , i2 <- is2
+         , let i = importSpecIntersect i1 i2
+         , isJust i]
+
+addIncludeSpec :: ImportSpec -> [ImportSpec] -> [ImportSpec]
+addIncludeSpec = mergeUpdate importSpecUnion
+
+mergeIncludeSpec :: [ImportSpec] -> [ImportSpec] -> [ImportSpec]
+mergeIncludeSpec = foldl' (flip addIncludeSpec)
+
+mergeHideIncludeSpec :: [ImportSpec] -> [ImportSpec] -> Maybe [ImportSpec]
+mergeHideIncludeSpec hd inc = go hd  (Just [])
+    where
+        go _      Nothing = Nothing
+        go []     rs = rs
+        go (h:hs) jrs@(Just rs)
+                = case foldr (foldHide h) (Just Keep) inc of
+            Nothing          -> go hs Nothing
+            Just Keep        -> go hs      (Just $ h:rs)
+            Just Drop        -> go hs      jrs
+            Just (Change h') -> go (h':hs) jrs
+        foldHide :: ImportSpec -> ImportSpec
+                 -> Maybe ImportSpecDiff -> Maybe ImportSpecDiff
+        foldHide h i (Just Keep) = importSpecDifference h i
+        foldHide _ _ r           = r
 
 -----------------------------------------------------------------------
 
