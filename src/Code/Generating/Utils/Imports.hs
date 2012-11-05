@@ -1,4 +1,6 @@
 module Code.Generating.Utils.Imports (
+    isSimpleImportDecl, combineImportDecl, addImportDecl,
+
     importSpecUnion, importSpecIntersect,
     ImportSpecDiff(..), importSpecDifference,
 
@@ -9,10 +11,53 @@ module Code.Generating.Utils.Imports (
 -----------------------------------------------------------------------
 
 import Data.List(union, intersect, nub, (\\), foldl')
-import Data.Maybe(isJust, fromJust)
+import Data.Maybe(isJust, fromJust, isNothing)
 
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.Syntax.Names
+
+-----------------------------------------------------------------------
+
+-- | Checks that an `ImportDecl` is 'simple', thus it's not imported
+-- with a specific source or package name.
+isSimpleImportDecl :: ImportDecl -> Bool
+isSimpleImportDecl (ImportDecl _ _ _ s p _ _) = not s && isNothing p
+
+-----------------------------------------------------------------------
+
+-- | Tries to combine two `ImportDecl`s. When it succeeds it will
+-- return `Just i` with `i` the equivalent `ImportDecl`, when this is
+-- not possible it will return `Nothing`.
+combineImportDecl :: ImportDecl -> ImportDecl -> Maybe ImportDecl
+combineImportDecl i1@(ImportDecl _ n1 q1 _ _ a1 s1) i2@(ImportDecl _ n2 q2 _ _ a2 s2)
+    | isSimpleImportDecl i1 && isSimpleImportDecl i2
+      && n1 == n2 && q1 == q2 && a1 == a2
+    = case (s1, s2) of
+        (Nothing, _      ) -> Just i1
+        (_      , Nothing) -> Just i2
+        (Just (True, is1), Just (True, is2))
+            -> Just $ i1{importSpecs = Just (True, mergeHidingSpec is1 is2)}
+        (Just (True, is1), Just (False, is2))
+            -> case mergeHideIncludeSpec is1 is2 of
+                Nothing  -> Nothing
+                Just is' -> Just i1{importSpecs= Just (True, is')}
+        (Just (False, is1), Just (True, is2))
+            -> case mergeHideIncludeSpec is2 is1 of
+                Nothing  -> Nothing
+                Just is' -> Just i1{importSpecs= Just (True, is')}
+        (Just (False, is1), Just (False, is2))
+            -> Just $ i1{importSpecs = Just (False, mergeIncludeSpec is1 is2)}
+    | otherwise = Nothing
+
+-----------------------------------------------------------------------
+
+-- | Adds an `ImportDecl` to a list and when possible merging the
+-- two `ImportDecl`s in stead of adding it to the end.
+addImportDecl :: ImportDecl -> [ImportDecl] -> [ImportDecl]
+addImportDecl ia []     = [ia]
+addImportDecl ia (i:is) = case combineImportDecl ia i of
+    Nothing -> addImportDecl ia is
+    Just i' -> i' : is
 
 -----------------------------------------------------------------------
 
