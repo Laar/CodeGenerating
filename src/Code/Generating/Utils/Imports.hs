@@ -59,10 +59,7 @@ combineImportDecl i1@(ImportDecl _ n1 q1 _ _ a1 s1) i2@(ImportDecl _ n2 q2 _ _ a
 -- | Adds an `ImportDecl` to a list and when possible merging the
 -- two `ImportDecl`s in stead of adding it to the end.
 addImportDecl :: ImportDecl -> [ImportDecl] -> [ImportDecl]
-addImportDecl ia []     = [ia]
-addImportDecl ia (i:is) = case combineImportDecl ia i of
-    Nothing -> addImportDecl ia is
-    Just i' -> i' : is
+addImportDecl = mergeUpdate combineImportDecl
 
 -----------------------------------------------------------------------
 
