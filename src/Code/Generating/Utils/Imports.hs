@@ -36,18 +36,23 @@ combineImportDecl i1@(ImportDecl _ n1 q1 _ _ a1 s1) i2@(ImportDecl _ n2 q2 _ _ a
         (Nothing, _      ) -> Just i1
         (_      , Nothing) -> Just i2
         (Just (True, is1), Just (True, is2))
+            -- collapsing is not correct here and should not happen
             -> Just $ i1{importSpecs = Just (True, mergeHidingSpec is1 is2)}
         (Just (True, is1), Just (False, is2))
             -> case mergeHideIncludeSpec is1 is2 of
                 Nothing  -> Nothing
-                Just is' -> Just i1{importSpecs= Just (True, is')}
+                Just is' -> Just i1{importSpecs = collapseEmpty (True, is')}
         (Just (False, is1), Just (True, is2))
             -> case mergeHideIncludeSpec is2 is1 of
                 Nothing  -> Nothing
-                Just is' -> Just i1{importSpecs= Just (True, is')}
+                Just is' -> Just i1{importSpecs = collapseEmpty (True, is')}
         (Just (False, is1), Just (False, is2))
             -> Just $ i1{importSpecs = Just (False, mergeIncludeSpec is1 is2)}
     | otherwise = Nothing
+    where
+        -- for collapsing empty hiding statements into full imports.
+        collapseEmpty (_, []) = Nothing
+        collapseEmpty i       = Just i
 
 -----------------------------------------------------------------------
 
@@ -70,7 +75,7 @@ mergeUpdate :: (a -> a -> Maybe a) -> a -> [a] -> [a]
 mergeUpdate f e = go
     where
         go [] = [e]
-        go (x:xs) = maybe (go xs) (:xs) $ f e x
+        go (x:xs) = maybe (x:go xs) (:xs) $ f e x
 
 nameEq :: Name -> Name -> e -> Maybe e
 nameEq n1 n2 e = if n1 == n2 then Just e else Nothing
