@@ -1,6 +1,8 @@
 module Code.Generating.Utils.Imports (
     isSimpleImportDecl, combineImportDecl, addImportDecl,
 
+    ImportList(..),
+
     importSpecUnion, importSpecIntersect,
     ImportSpecDiff(..), importSpecDifference,
 
@@ -12,6 +14,7 @@ module Code.Generating.Utils.Imports (
 
 import Data.List(union, intersect, nub, (\\), foldl')
 import Data.Maybe(isJust, fromJust, isNothing)
+import Data.Monoid
 
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.Syntax.Names
@@ -60,6 +63,17 @@ combineImportDecl i1@(ImportDecl _ n1 q1 _ _ a1 s1) i2@(ImportDecl _ n2 q2 _ _ a
 -- two `ImportDecl`s in stead of adding it to the end.
 addImportDecl :: ImportDecl -> [ImportDecl] -> [ImportDecl]
 addImportDecl = mergeUpdate combineImportDecl
+
+-----------------------------------------------------------------------
+
+-- | `ImportList` newtype, using addImportDecl as basis for a `Monoid`
+-- instance which merges imports.
+newtype ImportList = ImportList { toIDecls :: [ImportDecl] }
+    deriving(Eq, Ord, Show)
+
+instance Monoid ImportList where
+    mempty = ImportList []
+    il1 `mappend` il2 = ImportList $ foldr (addImportDecl) (toIDecls il1) (toIDecls il2)
 
 -----------------------------------------------------------------------
 
