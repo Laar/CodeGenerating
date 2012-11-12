@@ -1,5 +1,5 @@
 module Code.Generating.Utils.Exports (
-    mergeExportSpec
+    mergeExportSpec, addExportSpec
 ) where
 
 ------------------------------------------------------------------------
@@ -10,6 +10,10 @@ import Language.Haskell.Exts.Syntax
 import Code.Generating.InternalUtils
 
 ------------------------------------------------------------------------
+
+addExportSpec :: ExportSpec -> [ExportSpec] -> [ExportSpec]
+addExportSpec = mergeUpdate mergeExportSpec
+
 ------------------------------------------------------------------------
 
 -- | Tries to merge two `ExportSpec`s, when they can be merged return
