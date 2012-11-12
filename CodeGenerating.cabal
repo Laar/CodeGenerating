@@ -28,7 +28,8 @@ Library
                  Code.Generating.Builder.ModuleBuilder
                  Code.Generating.Builder.Module Code.Generating.Builder.Package,
                  Code.Generating.Utils.Imports,
-                 Code.Generating.Utils.Exports
+                 Code.Generating.Utils.Exports,
+                 Code.Generating.InternalUtils
   Ghc-options: -Wall
 
 Test-suite tests

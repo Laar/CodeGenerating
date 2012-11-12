@@ -18,6 +18,7 @@ import Data.Monoid
 
 import Language.Haskell.Exts.Syntax
 import Code.Generating.Utils.Syntax.Names
+import Code.Generating.InternalUtils
 
 -----------------------------------------------------------------------
 
@@ -77,22 +78,6 @@ instance Monoid ImportList where
 
 -----------------------------------------------------------------------
 
--- | Merge update an element into an list. The update function is
--- applied to the new element and every element in the list until it
--- returns `Just x` then the current element is replaced. If it results
--- in `Nothing` for every element in the list then the new element is
--- added to the list.
-mergeUpdate :: (a -> a -> Maybe a) -> a -> [a] -> [a]
-mergeUpdate f e = go
-    where
-        go [] = [e]
-        go (x:xs) = maybe (x:go xs) (:xs) $ f e x
-
-nameEq :: Name -> Name -> e -> Maybe e
-nameEq n1 n2 e = if n1 == n2 then Just e else Nothing
-
------------------------------------------------------------------------
-
 mergeHidingSpec :: [ImportSpec] -> [ImportSpec] -> [ImportSpec]
 mergeHidingSpec is1 is2
     = [fromJust i
@@ -131,9 +116,9 @@ mergeHideIncludeSpec hd inc = go hd  (Just [])
 importSpecIntersect :: ImportSpec -> ImportSpec -> Maybe ImportSpec
 importSpecIntersect i1 i2 = case (i1, i2) of
 -- x,x
-    (IVar n1         , IVar n2)         -> nameEq n1 n2 i2
-    (IAbs n1         , IAbs n2)         -> nameEq n1 n2 i2
-    (IThingAll n1    , IThingAll n2)    -> nameEq n1 n2 i2
+    (IVar n1         , IVar n2)         -> onEq n1 n2 i2
+    (IAbs n1         , IAbs n2)         -> onEq n1 n2 i2
+    (IThingAll n1    , IThingAll n2)    -> onEq n1 n2 i2
     (IThingWith n1 p1, IThingWith n2 p2)
         | n1 /= n2  -> Nothing
         | otherwise -> Just . IThingWith n1 $ p1 `intersect` p2
@@ -145,13 +130,13 @@ importSpecIntersect i1 i2 = case (i1, i2) of
         | n2 `elem` (map unCName ps) -> Just i2
         | otherwise                  -> Nothing
 -- IAbs,* and *,IAbs
-    (IAbs n1        , IThingAll n2   ) -> nameEq n1 n2 i1
-    (IThingAll n1   , IAbs n2        ) -> nameEq n1 n2 i2
-    (IAbs n1        , IThingWith n2 _) -> nameEq n1 n2 i1
-    (IThingWith n1 _, IAbs n2        ) -> nameEq n1 n2 i2
+    (IAbs n1        , IThingAll n2   ) -> onEq n1 n2 i1
+    (IThingAll n1   , IAbs n2        ) -> onEq n1 n2 i2
+    (IAbs n1        , IThingWith n2 _) -> onEq n1 n2 i1
+    (IThingWith n1 _, IAbs n2        ) -> onEq n1 n2 i2
 -- IThingAll,* and *,IThingAll
-    (IThingAll n1   , IThingWith n2 _) -> nameEq n1 n2 i2
-    (IThingWith n1 _, IThingAll n2   ) -> nameEq n1 n2 i1
+    (IThingAll n1   , IThingWith n2 _) -> onEq n1 n2 i2
+    (IThingWith n1 _, IThingAll n2   ) -> onEq n1 n2 i1
 -- other cases (IVar,IAbs), (IVar, IThingAll)
     (_              ,_               ) -> Nothing
 
@@ -163,9 +148,9 @@ importSpecIntersect i1 i2 = case (i1, i2) of
 importSpecUnion :: ImportSpec -> ImportSpec -> Maybe ImportSpec
 importSpecUnion i1 i2 = case (i1, i2) of
 -- x,x
-    (IVar n1         , IVar n2)         -> nameEq n1 n2 i2
-    (IAbs n1         , IAbs n2)         -> nameEq n1 n2 i2
-    (IThingAll n1    , IThingAll n2)    -> nameEq n1 n2 i2
+    (IVar n1         , IVar n2)         -> onEq n1 n2 i2
+    (IAbs n1         , IAbs n2)         -> onEq n1 n2 i2
+    (IThingAll n1    , IThingAll n2)    -> onEq n1 n2 i2
     (IThingWith n1 p1, IThingWith n2 p2)
         | n1 /= n2  -> Nothing
         | otherwise -> Just . IThingWith n1 $ p1 `union` p2
@@ -178,13 +163,13 @@ importSpecUnion i1 i2 = case (i1, i2) of
         | otherwise                  -> Nothing
 -- IAbs,* and *,IAbs
 -- TODO: think about constructor hiding
-    (IAbs n1        , IThingAll n2   ) -> nameEq n1 n2 i2
-    (IThingAll n1   , IAbs n2        ) -> nameEq n1 n2 i1
-    (IAbs n1        , IThingWith n2 _) -> nameEq n1 n2 i2
-    (IThingWith n1 _, IAbs n2        ) -> nameEq n1 n2 i1
+    (IAbs n1        , IThingAll n2   ) -> onEq n1 n2 i2
+    (IThingAll n1   , IAbs n2        ) -> onEq n1 n2 i1
+    (IAbs n1        , IThingWith n2 _) -> onEq n1 n2 i2
+    (IThingWith n1 _, IAbs n2        ) -> onEq n1 n2 i1
 -- IThingAll,* and *,IThingAll
-    (IThingAll n1   , IThingWith n2 _) -> nameEq n1 n2 i1
-    (IThingWith n1 _, IThingAll n2   ) -> nameEq n1 n2 i2
+    (IThingAll n1   , IThingWith n2 _) -> onEq n1 n2 i1
+    (IThingWith n1 _, IThingAll n2   ) -> onEq n1 n2 i2
 -- other cases (IVar,IAbs), (IVar, IThingAll)
     (_              ,_               ) -> Nothing
 

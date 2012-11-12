@@ -7,6 +7,9 @@ module Code.Generating.Utils.Exports (
 import Data.List(union)
 import Language.Haskell.Exts.Syntax
 
+import Code.Generating.InternalUtils
+
+------------------------------------------------------------------------
 ------------------------------------------------------------------------
 
 -- | Tries to merge two `ExportSpec`s, when they can be merged return
@@ -42,8 +45,5 @@ mergeExportSpec e1 e2 = case (e1,e2) of
         -- don't attempt to merge EVars, though it might be possible
     (EThingWith  _  _, EVar        _   ) -> Nothing
     (EVar        _   , EThingWith  _  _) -> Nothing
-    where
-        onEq :: Eq a => a -> a -> r -> Maybe r
-        onEq q1 q2 r = if q1 == q2 then Just r else Nothing
 
 ------------------------------------------------------------------------
