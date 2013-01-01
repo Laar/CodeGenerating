@@ -98,7 +98,9 @@ getModule mn p = case M.lookup mn $ internalMods p of
 listModules :: Package m -> ([ModuleName], [ModuleName])
 listModules p = (M.keys $ externalMods p, M.keys $ internalMods p)
 
-processModules :: (ModuleName -> Module -> IO(), ModuleName -> Module -> IO()) -> Package Module -> IO ()
+processModules :: Monad m
+    => (ModuleName -> Module -> m (), ModuleName -> Module -> m ())
+    -> Package Module -> m ()
 processModules (f, g) p = sequence_ $ map f' exts ++ map g' ints
     where
         f' = uncurry f
@@ -106,7 +108,8 @@ processModules (f, g) p = sequence_ $ map f' exts ++ map g' ints
         ints = M.toList $ internalMods p
         exts = M.toList $ externalMods p
 
-processModules' :: (ModuleName -> Module -> IO()) -> Package Module -> IO ()
+processModules' :: Monad m => (ModuleName -> Module -> m ())
+    -> Package Module -> m ()
 processModules' f = processModules (f,f)
 
 -- | Write the modules to a specific directory
