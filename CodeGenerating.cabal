@@ -14,9 +14,9 @@ Author: Lars Corbijn
 Tested-with:
 Extra-source-files:
 Library
-  Exposed-modules: Code.Generating.Builder Code.Generating.Mangler
-                   Code.Generating.Package Code.Generating.Utils
-  Build-depends: base -any, containers -any, directory -any,
+  Exposed-modules: Code.Generating.Mangler
+                   Code.Generating.Utils
+  Build-depends: base -any, containers -any,
                  filepath -any, haskell-src-exts >=1.11, mtl -any
 
   hs-source-dirs: src
@@ -25,8 +25,6 @@ Library
                  Code.Generating.Utils.Syntax.Decl Code.Generating.Utils.Syntax.Type
                  Code.Generating.Utils.Syntax.Pat Code.Generating.Utils.Syntax.Exp
                  Code.Generating.Utils.Syntax.Alt Code.Generating.Utils.Syntax.Names
-                 Code.Generating.Builder.ModuleBuilder
-                 Code.Generating.Builder.Module Code.Generating.Builder.Package,
                  Code.Generating.Utils.Imports,
                  Code.Generating.Utils.Exports,
                  Code.Generating.InternalUtils
