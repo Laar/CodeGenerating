@@ -1,44 +1,64 @@
 name: CodeGenerating
-Version: 0.1.1
+Version: 0.2.0
 Cabal-version: >=1.9
 Build-type: Simple
 License: BSD3
 License-file: LICENSE
 Maintainer:
-Stability: Constant experimental development
+Stability:
+  Constant experimental development, though the utilities are fairly
+  constant.
 Bug-reports:
 Synopsis:
-Description: .
+  Utility functions for haskell-src-exts aimed at generating code.
+  Mosty chaining and defaulting arguments to constructors as well
+  as exrtaction of specific arguments and unwrapping.
+Description:
+  Utility functions for haskell-src-exts aimed at generating code.
 Category: Code
 Author: Lars Corbijn
 Tested-with:
 Extra-source-files:
 Library
-  Exposed-modules: Code.Generating.Builder Code.Generating.Mangler
-                   Code.Generating.Package Code.Generating.Utils
-  Build-depends: base -any, containers -any, directory -any,
-                 filepath -any, haskell-src-exts >=1.11, mtl -any
+  Exposed-modules:
+    Code.Generating.Mangler
+    Code.Generating.Utils
+  Build-depends:
+    base >= 4,
+    containers -any,
+    filepath -any,
+    haskell-src-exts >=1.11,
+    mtl -any
 
   hs-source-dirs: src
-  Other-modules: Code.Generating.Utils.Unsorted Code.Generating.Utils.No
-                 Code.Generating.Utils.Module Code.Generating.Utils.Syntax
-                 Code.Generating.Utils.Syntax.Decl Code.Generating.Utils.Syntax.Type
-                 Code.Generating.Utils.Syntax.Pat Code.Generating.Utils.Syntax.Exp
-                 Code.Generating.Utils.Syntax.Alt Code.Generating.Utils.Syntax.Names
-                 Code.Generating.Builder.ModuleBuilder
-                 Code.Generating.Builder.Module Code.Generating.Builder.Package
+  Other-modules:
+    Code.Generating.Utils.Unsorted
+    Code.Generating.Utils.No
+    Code.Generating.Utils.Module
+    Code.Generating.Utils.Syntax
+    Code.Generating.Utils.Syntax.Decl
+    Code.Generating.Utils.Syntax.Type
+    Code.Generating.Utils.Syntax.Pat
+    Code.Generating.Utils.Syntax.Exp
+    Code.Generating.Utils.Syntax.Alt
+    Code.Generating.Utils.Syntax.Names
+    Code.Generating.Utils.Imports
+    Code.Generating.Utils.Exports
+    Code.Generating.InternalUtils
   Ghc-options: -Wall
 
 Test-suite tests
   Type:           exitcode-stdio-1.0
   Hs-source-dirs: tests
   Main-is:        Tests.hs
-  Build-depends:  CodeGenerating,
-                  base >= 4.0 && < 5,
-                  test-framework >= 0.5 && < 0.6,
-                  test-framework-quickcheck2 >= 0.2.12 && < 0.3,
-                  QuickCheck >= 2.4,
-                  random == 1.0.*,
-                  haskell-src-exts >= 1.11,
-                  haskell-src-exts-quickcheck -any
+  Other-modules:  Utils.Type
+  Build-depends:
+    CodeGenerating,
+    base >= 4.0,
+    test-framework >= 0.5,
+    test-framework-quickcheck2 >= 0.2.12,
+    QuickCheck >= 2.4,
+    random == 1.0.*,
+    haskell-src-exts >= 1.11,
+    haskell-src-exts-quickcheck -any
   Ghc-options:    -Wall

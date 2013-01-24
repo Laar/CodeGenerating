@@ -25,6 +25,8 @@
 
 module Code.Generating.Utils (
 
+    module Code.Generating.Utils.Exports,
+    module Code.Generating.Utils.Imports,
     module Code.Generating.Utils.No,
     module Code.Generating.Utils.Module,
     module Code.Generating.Utils.Syntax,
@@ -34,6 +36,8 @@ module Code.Generating.Utils (
 
 -----------------------------------------------------------------------------
 
+import Code.Generating.Utils.Exports
+import Code.Generating.Utils.Imports
 import Code.Generating.Utils.Module
 import Code.Generating.Utils.No
 import Code.Generating.Utils.Syntax
