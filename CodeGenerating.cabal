@@ -1,5 +1,5 @@
 name: CodeGenerating
-Version: 0.2.0
+Version: 0.3.0
 Cabal-version: >=1.9
 Build-type: Simple
 License: BSD3
@@ -27,7 +27,7 @@ Library
     base >= 4,
     containers -any,
     filepath -any,
-    haskell-src-exts >=1.11 && < 1.16,
+    haskell-src-exts >=1.16,
     mtl -any
 
   hs-source-dirs: src
@@ -59,6 +59,6 @@ Test-suite tests
     test-framework-quickcheck2 >= 0.2.12,
     QuickCheck >= 2.4,
     random == 1.0.*,
-    haskell-src-exts >= 1.11 && < 1.16,
+    haskell-src-exts >= 1.16,
     haskell-src-exts-quickcheck -any
   Ghc-options:    -Wall

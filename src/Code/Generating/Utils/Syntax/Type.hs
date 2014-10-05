@@ -16,7 +16,6 @@ module Code.Generating.Utils.Syntax.Type (
     tyCon, tyCon',
     tyVar', addIOType,
     (-->>),
-    unBangType,
 
     specializeType,
     despecializeType,
@@ -53,11 +52,6 @@ addIOType = TyApp (tyCon' "IO")
 -- | Alias for (->) types
 (-->>) :: Type -> Type -> Type
 (-->>) = TyFun
-
-unBangType :: BangType -> Type
-unBangType (UnBangedTy t) = t
-unBangType (BangedTy   t) = t
-unBangType (UnpackedTy t) = t
 
 -----------------------------------------------------------------------------
 

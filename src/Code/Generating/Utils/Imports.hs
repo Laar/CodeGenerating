@@ -25,7 +25,7 @@ import Code.Generating.InternalUtils
 -- | Checks that an `ImportDecl` is 'simple', thus it's not imported
 -- with a specific source or package name.
 isSimpleImportDecl :: ImportDecl -> Bool
-isSimpleImportDecl (ImportDecl _ _ _ s p _ _) = not s && isNothing p
+isSimpleImportDecl i = not (importSrc i) && isNothing (importPkg i)
 
 -----------------------------------------------------------------------
 
@@ -33,9 +33,9 @@ isSimpleImportDecl (ImportDecl _ _ _ s p _ _) = not s && isNothing p
 -- return `Just i` with `i` the equivalent `ImportDecl`, when this is
 -- not possible it will return `Nothing`.
 combineImportDecl :: ImportDecl -> ImportDecl -> Maybe ImportDecl
-combineImportDecl i1@(ImportDecl _ n1 q1 _ _ a1 s1) i2@(ImportDecl _ n2 q2 _ _ a2 s2)
+combineImportDecl i1@(ImportDecl _ n1 q1 _ si1 _ a1 s1) i2@(ImportDecl _ n2 q2 _ si2 _ a2 s2)
     | isSimpleImportDecl i1 && isSimpleImportDecl i2
-      && n1 == n2 && q1 == q2 && a1 == a2
+      && n1 == n2 && q1 == q2 && a1 == a2 && si1 == si2
     = case (s1, s2) of
         (Nothing, _      ) -> Just i1
         (_      , Nothing) -> Just i2
@@ -116,17 +116,17 @@ mergeHideIncludeSpec hd inc = go hd  (Just [])
 importSpecIntersect :: ImportSpec -> ImportSpec -> Maybe ImportSpec
 importSpecIntersect i1 i2 = case (i1, i2) of
 -- x,x
-    (IVar n1         , IVar n2)         -> onEq n1 n2 i2
+    (IVar s1 n1      , IVar s2 n2)      -> onEq (s1, n1) (s2, n2) i2
     (IAbs n1         , IAbs n2)         -> onEq n1 n2 i2
     (IThingAll n1    , IThingAll n2)    -> onEq n1 n2 i2
     (IThingWith n1 p1, IThingWith n2 p2)
         | n1 /= n2  -> Nothing
         | otherwise -> Just . IThingWith n1 $ p1 `intersect` p2
 -- IVar,* and *,IVar
-    (IVar n1, IThingWith _ ps)
+    (IVar NoNamespace n1, IThingWith _ ps)
         | n1 `elem` (map unCName ps) -> Just i1
         | otherwise                  -> Nothing
-    (IThingWith _ ps, IVar n2)
+    (IThingWith _ ps, IVar NoNamespace n2)
         | n2 `elem` (map unCName ps) -> Just i2
         | otherwise                  -> Nothing
 -- IAbs,* and *,IAbs
@@ -148,17 +148,17 @@ importSpecIntersect i1 i2 = case (i1, i2) of
 importSpecUnion :: ImportSpec -> ImportSpec -> Maybe ImportSpec
 importSpecUnion i1 i2 = case (i1, i2) of
 -- x,x
-    (IVar n1         , IVar n2)         -> onEq n1 n2 i2
+    (IVar s1 n1      , IVar s2 n2)      -> onEq (s1, n1) (s2, n2) i2
     (IAbs n1         , IAbs n2)         -> onEq n1 n2 i2
     (IThingAll n1    , IThingAll n2)    -> onEq n1 n2 i2
     (IThingWith n1 p1, IThingWith n2 p2)
         | n1 /= n2  -> Nothing
         | otherwise -> Just . IThingWith n1 $ p1 `union` p2
 -- IVar,* and *,IVar
-    (IVar n1, IThingWith _ ps)
+    (IVar NoNamespace n1, IThingWith _ ps)
         | n1 `elem` (map unCName ps) -> Just i2
         | otherwise                  -> Nothing
-    (IThingWith _ ps, IVar n2)
+    (IThingWith _ ps, IVar NoNamespace n2)
         | n2 `elem` (map unCName ps) -> Just i1
         | otherwise                  -> Nothing
 -- IAbs,* and *,IAbs
@@ -190,22 +190,22 @@ importSpecDifference i1 i2 = case (i1, i2) of
     -- duplicates are removed
     -- IVar
         -- IVar
-    (IVar n1, IVar n2) -> nameNEq n1 n2
+    (IVar s1 n1, IVar s2 n2) -> nEq (s1, n1) (s2, n2)
         -- IAbs
-    (IVar  _, IAbs  _) -> keep
+    (IVar _ _, IAbs  _) -> keep
         -- IThingAll -> undecidable
             -- The var could be a class methode or record and then it
             -- should not be hidden. When it's not it should be hidden,
             -- therefore it's undecidable.
-    (IVar _ , IThingAll     _) -> Nothing
+    (IVar _ _ , IThingAll     _) -> Nothing
         -- IThingWith ->
-    (IVar n1, IThingWith _ ps)
+    (IVar NoNamespace n1, IThingWith _ ps)
         | n1 `elem` map unCName ps -> Just Drop
         -- Not requested by the include
         | otherwise                -> keep
     -- IAbs
         -- IVar
-    (IAbs  _, IVar  _) -> keep
+    (IAbs  _, IVar NoNamespace _) -> keep
         -- IAbs -> undecidable
             -- The hiding could hide in addition to the abstract
             -- datatype also its constructor with the same name.
@@ -213,26 +213,26 @@ importSpecDifference i1 i2 = case (i1, i2) of
             -- packed into a single ImportSpec
     (IAbs n1, IAbs n2) -> undecideNameEq n1 n2
         -- IThingAll
-    (IAbs n1, IThingAll n2   ) -> nameNEq n1 n2
+    (IAbs n1, IThingAll n2   ) -> nEq n1 n2
         -- IThingWith -> undecidable
             -- As with IAbs there might the constructor might be hidden
     (IAbs n1, IThingWith n2 _) -> undecideNameEq n1 n2
     -- IThingAll
         -- IVar -> undecidable due to record/typeclass method hiding
-    (IThingAll _, IVar _) -> Nothing
+    (IThingAll _, IVar _ _) -> Nothing
         -- IAbs -> (non possible)
             -- Not possible in one line to hide everything but the
             -- abstract datatype. For the same datatype.
     (IThingAll n1, IAbs n2) -> undecideNameEq n1 n2
         -- IThingAll -> i1
-    (IThingAll n1, IThingAll n2) -> nameNEq n1 n2
+    (IThingAll n1, IThingAll n2) -> nEq n1 n2
         -- IThingWith -> (non possible) see IAbs
     (IThingAll n1, IThingWith n2 _) -> undecideNameEq n1 n2
     -- IThingWith
         -- IVar -> undecidable
             -- As with the reverse case, it could be a class method or
             -- record that is implicitly requested
-    (IThingWith _ ps, IVar n2)
+    (IThingWith _ ps, IVar NoNamespace n2)
         | n2 `elem` map unCName ps -> Just . Change
             . IThingWith n2 $ filter ((/=) n2 . unCName) ps
         | otherwise    -> Nothing
@@ -254,7 +254,7 @@ importSpecDifference i1 i2 = case (i1, i2) of
         keep = Just Keep
         -- undecidable in case of equal names
         undecideNameEq n1 n2 = if n1 == n2 then Nothing else keep
-        nameNEq :: Name -> Name -> Maybe ImportSpecDiff
-        nameNEq n1 n2 = Just $ if n1 == n2 then Drop else Keep
+        nEq :: Eq a => a -> a -> Maybe ImportSpecDiff
+        nEq n1 n2 = Just $ if n1 == n2 then Drop else Keep
 
 -----------------------------------------------------------------------

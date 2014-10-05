@@ -63,23 +63,23 @@ moduleNameToPath (ModuleName n) = foldr replace [] n
 
 
 eVar' :: String -> ExportSpec
-eVar' = EVar . UnQual . Ident
+eVar' = EVar NoNamespace . UnQual . Ident
 
 eVar :: Name -> ExportSpec
-eVar = EVar . UnQual
+eVar = EVar NoNamespace . UnQual
 
 iVar :: Name -> ImportSpec
-iVar = IVar
+iVar = IVar NoNamespace
 
 -- | Make an import for a module importing all content, e.g.
 -- > import Data.List
 importAll :: ModuleName -> ImportDecl
-importAll name = ImportDecl noSrcLoc name False False Nothing Nothing Nothing
+importAll name = ImportDecl noSrcLoc name False False False Nothing Nothing Nothing
 
 -- | Make an import for a module restricted to the given import spec, e.g.
 -- > import Data.List(nub)
 partialImport :: ModuleName -> [ImportSpec] -> ImportDecl
 partialImport name imports =
-    ImportDecl noSrcLoc name False False Nothing Nothing (Just (False, imports))
+    ImportDecl noSrcLoc name False False False Nothing Nothing (Just (False, imports))
 
 -----------------------------------------------------------------------------

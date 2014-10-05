@@ -25,7 +25,7 @@ import Code.Generating.Utils.No
 -----------------------------------------------------------------------------
 
 toAlt :: Pat -> Exp -> Alt
-toAlt p e = Alt noSrcLoc p (UnGuardedAlt e) (BDecls [])
+toAlt p e = Alt noSrcLoc p (UnGuardedRhs e) (BDecls [])
 
 toAltTup :: (Pat, Exp) -> Alt
 toAltTup = uncurry toAlt

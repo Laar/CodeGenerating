@@ -24,15 +24,15 @@ mergeExportSpec :: ExportSpec -> ExportSpec -> Maybe ExportSpec
 mergeExportSpec e1 e2 = case (e1,e2) of
     -- Easy cases
     -- EVar
-    (EVar q1, EVar q2) -> onEq q1 q2 e1
+    (EVar n1 q1, EVar n2 q2) -> onEq (n1, q1) (n2, q2) e1
     -- +EAbs
-    (EVar  _, EAbs  _) -> Nothing
-    (EAbs q1, EAbs q2) -> onEq q1 q2 e1
-    (EAbs  _, EVar  _)  -> Nothing
+    (EVar  _ _, EAbs  _)    -> Nothing
+    (EAbs q1  , EAbs q2)    -> onEq q1 q2 e1
+    (EAbs  _  , EVar  _ _)  -> Nothing
     -- +EThingAll
     (EThingAll q1, EThingAll q2) -> onEq q1 q2 e1
-    (EVar       _, EThingAll  _) -> Nothing
-    (EThingAll  _, EVar       _) -> Nothing
+    (EVar     _ _, EThingAll  _) -> Nothing
+    (EThingAll  _, EVar     _ _) -> Nothing
     (EThingAll q1, EAbs      q2) -> onEq q1 q2 e1
     (EAbs      q1, EThingAll q2) -> onEq q1 q2 e2
     -- +EModuleContents
@@ -47,7 +47,7 @@ mergeExportSpec e1 e2 = case (e1,e2) of
     (EThingWith q1  _, EThingAll  q2   ) -> onEq q1 q2 e2
     (EThingAll  q1   , EThingWith q2  _) -> onEq q1 q2 e1
         -- don't attempt to merge EVars, though it might be possible
-    (EThingWith  _  _, EVar        _   ) -> Nothing
-    (EVar        _   , EThingWith  _  _) -> Nothing
+    (EThingWith  _  _, EVar        _  _) -> Nothing
+    (EVar        _  _, EThingWith  _  _) -> Nothing
 
 ------------------------------------------------------------------------
