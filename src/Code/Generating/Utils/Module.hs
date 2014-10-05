@@ -15,7 +15,7 @@
 module Code.Generating.Utils.Module (
     emptyModule,
     emptyModule',
-    eVar, eVar',
+    eVar, eVar', iVar,
 
     importAll, partialImport,
 
@@ -67,6 +67,9 @@ eVar' = EVar . UnQual . Ident
 
 eVar :: Name -> ExportSpec
 eVar = EVar . UnQual
+
+iVar :: Name -> ImportSpec
+iVar = IVar
 
 -- | Make an import for a module importing all content, e.g.
 -- > import Data.List
